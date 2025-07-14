@@ -80,7 +80,7 @@ const Index = () => {
               <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
                 <Icon name="Gamepad2" size={20} className="text-white" />
               </div>
-              <h1 className="text-xl font-bold text-gray-900">GameDonate</h1>
+              <h1 className="text-xl font-bold text-gray-900">GhostShop01</h1>
             </div>
             
             <nav className="hidden md:flex space-x-8">
@@ -277,7 +277,7 @@ const Index = () => {
                 <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
                   <Icon name="Gamepad2" size={20} className="text-white" />
                 </div>
-                <h3 className="text-xl font-bold">GameDonate</h3>
+                <h3 className="text-xl font-bold">GhostShop01</h3>
               </div>
               <p className="text-gray-400">Быстро и безопасно пополняй внутриигровую валюту</p>
             </div>
@@ -313,7 +313,7 @@ const Index = () => {
           </div>
           
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 GameDonate. Все права защищены.</p>
+            <p>&copy; 2025 GhostShop01. Все права защищены.</p>
           </div>
         </div>
       </footer>
