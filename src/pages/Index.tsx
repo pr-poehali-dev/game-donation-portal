@@ -4,8 +4,53 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Icon from "@/components/ui/icon";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState } from "react";
 
 const Index = () => {
+  const [userServices, setUserServices] = useState([
+    {
+      id: 1,
+      game: "Fortnite",
+      title: "Быстрый донат V-Bucks",
+      description: "Пополню V-Bucks за 5 минут",
+      price: "₽95",
+      status: "active"
+    },
+    {
+      id: 2,
+      game: "Minecraft",
+      title: "Minecoins + бонус",
+      description: "320 Minecoins + 50 бонусных",
+      price: "₽75",
+      status: "active"
+    }
+  ]);
+
+  const [showAddService, setShowAddService] = useState(false);
+  const [newService, setNewService] = useState({
+    game: "",
+    title: "",
+    description: "",
+    price: "",
+    amount: ""
+  });
+
+  const handleAddService = () => {
+    if (newService.game && newService.title && newService.price) {
+      const service = {
+        id: userServices.length + 1,
+        ...newService,
+        status: "active"
+      };
+      setUserServices([...userServices, service]);
+      setNewService({ game: "", title: "", description: "", price: "", amount: "" });
+      setShowAddService(false);
+    }
+  };
   const donationPackages = [
     {
       id: 1,
@@ -194,14 +239,14 @@ const Index = () => {
 
           {/* Profile */}
           <TabsContent value="profile">
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-6xl mx-auto">
               <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
                 Профиль пользователя
               </h3>
               
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
                 {/* Profile Info */}
-                <Card className="lg:col-span-1">
+                <Card className="xl:col-span-1">
                   <CardHeader>
                     <CardTitle className="flex items-center">
                       <Icon name="User" size={20} className="mr-2" />
@@ -220,42 +265,147 @@ const Index = () => {
                   </CardContent>
                 </Card>
 
+                {/* My Services */}
+                <Card className="xl:col-span-2">
+                  <CardHeader>
+                    <div className="flex justify-between items-center">
+                      <CardTitle className="flex items-center">
+                        <Icon name="Store" size={20} className="mr-2" />
+                        Мои услуги
+                      </CardTitle>
+                      <Button 
+                        onClick={() => setShowAddService(!showAddService)}
+                        size="sm"
+                        className="bg-indigo-600 hover:bg-indigo-700"
+                      >
+                        <Icon name="Plus" size={16} className="mr-2" />
+                        Добавить
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    {showAddService && (
+                      <Card className="mb-4 border-dashed border-2 border-indigo-200">
+                        <CardContent className="p-4">
+                          <h4 className="font-semibold mb-3">Создать новую услугу</h4>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                              <Label htmlFor="game">Игра</Label>
+                              <Select value={newService.game} onValueChange={(value) => setNewService({...newService, game: value})}>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Выберите игру" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="Fortnite">Fortnite</SelectItem>
+                                  <SelectItem value="Minecraft">Minecraft</SelectItem>
+                                  <SelectItem value="Roblox">Roblox</SelectItem>
+                                  <SelectItem value="Genshin Impact">Genshin Impact</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div>
+                              <Label htmlFor="title">Название услуги</Label>
+                              <Input 
+                                placeholder="Быстрый донат"
+                                value={newService.title}
+                                onChange={(e) => setNewService({...newService, title: e.target.value})}
+                              />
+                            </div>
+                            <div>
+                              <Label htmlFor="amount">Количество валюты</Label>
+                              <Input 
+                                placeholder="1000 V-Bucks"
+                                value={newService.amount}
+                                onChange={(e) => setNewService({...newService, amount: e.target.value})}
+                              />
+                            </div>
+                            <div>
+                              <Label htmlFor="price">Цена</Label>
+                              <Input 
+                                placeholder="₽99"
+                                value={newService.price}
+                                onChange={(e) => setNewService({...newService, price: e.target.value})}
+                              />
+                            </div>
+                            <div className="md:col-span-2">
+                              <Label htmlFor="description">Описание</Label>
+                              <Textarea 
+                                placeholder="Детали вашей услуги..."
+                                value={newService.description}
+                                onChange={(e) => setNewService({...newService, description: e.target.value})}
+                                rows={2}
+                              />
+                            </div>
+                          </div>
+                          <div className="flex gap-2 mt-4">
+                            <Button onClick={handleAddService} size="sm" className="bg-green-600 hover:bg-green-700">
+                              <Icon name="Check" size={16} className="mr-2" />
+                              Создать
+                            </Button>
+                            <Button onClick={() => setShowAddService(false)} variant="outline" size="sm">
+                              Отмена
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+
+                    <div className="space-y-3">
+                      {userServices.map((service) => (
+                        <div key={service.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <p className="font-semibold">{service.title}</p>
+                              <Badge variant="outline" className="text-xs">{service.game}</Badge>
+                            </div>
+                            <p className="text-sm text-gray-600">{service.description}</p>
+                            {service.amount && <p className="text-sm text-indigo-600 font-medium">{service.amount}</p>}
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <div className="text-right">
+                              <p className="font-bold text-lg">{service.price}</p>
+                              <Badge className="bg-green-100 text-green-800 text-xs">Активна</Badge>
+                            </div>
+                            <Button variant="ghost" size="sm">
+                              <Icon name="MoreVertical" size={16} />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
                 {/* Purchase History */}
-                <Card className="lg:col-span-2">
+                <Card className="xl:col-span-1">
                   <CardHeader>
                     <CardTitle className="flex items-center">
                       <Icon name="History" size={20} className="mr-2" />
-                      История покупок
+                      История
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                        <div>
-                          <p className="font-semibold">2800 V-Bucks</p>
-                          <p className="text-sm text-gray-500">Fortnite • 14 июл 2025</p>
-                        </div>
-                        <Badge variant="secondary" className="bg-green-100 text-green-800">
+                    <div className="space-y-3">
+                      <div className="p-3 bg-gray-50 rounded-lg">
+                        <p className="font-semibold text-sm">2800 V-Bucks</p>
+                        <p className="text-xs text-gray-500">14 июл</p>
+                        <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs mt-1">
                           Выполнено
                         </Badge>
                       </div>
                       
-                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                        <div>
-                          <p className="font-semibold">1720 Minecoins</p>
-                          <p className="text-sm text-gray-500">Minecraft • 12 июл 2025</p>
-                        </div>
-                        <Badge variant="secondary" className="bg-green-100 text-green-800">
+                      <div className="p-3 bg-gray-50 rounded-lg">
+                        <p className="font-semibold text-sm">1720 Minecoins</p>
+                        <p className="text-xs text-gray-500">12 июл</p>
+                        <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs mt-1">
                           Выполнено
                         </Badge>
                       </div>
                       
-                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                        <div>
-                          <p className="font-semibold">400 Robux</p>
-                          <p className="text-sm text-gray-500">Roblox • 10 июл 2025</p>
-                        </div>
-                        <Badge variant="secondary" className="bg-green-100 text-green-800">
+                      <div className="p-3 bg-gray-50 rounded-lg">
+                        <p className="font-semibold text-sm">400 Robux</p>
+                        <p className="text-xs text-gray-500">10 июл</p>
+                        <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs mt-1">
                           Выполнено
                         </Badge>
                       </div>
